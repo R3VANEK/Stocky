@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.GridPane?>
+
+
+<ScrollPane xmlns:fx="http://javafx.com/fxml" minHeight="Infinity" minWidth="Infinity" fx:id="mainPanel" fx:controller="com.example.stocky.HelloController" stylesheets="@app/test.css">
+
+
+
+
+<VBox alignment="CENTER">
+
+    <VBox.margin>
+        <Insets left="20" top="50"/>
+    </VBox.margin>
+
+
+    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
+    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
+    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
+    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
+    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
+
+</VBox>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ScrollPane>

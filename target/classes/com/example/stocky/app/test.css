@@ -1,0 +1,9 @@
+#mainPanel{
+    -fx-background:#2f333b;
+    -fx-background-color:#2f333b;
+}
+.stock-div{
+    -fx-background-color:#5e6063;
+    -fx-background-insets: 30px;
+    -fx-min-height:200px;
+}
