@@ -1,0 +1,12 @@
+{
+  "myStocks": [
+    {
+      "Ticker" : "MSFT",
+      "BoughtAt" : "300"
+    },
+    {
+      "Ticker" : "GME",
+      "BoughtAt" : "400"
+    }
+  ]
+}

@@ -18,27 +18,14 @@
 
 
 
-<VBox alignment="CENTER">
-
-    <VBox.margin>
-        <Insets left="20" top="50"/>
-    </VBox.margin>
+<VBox alignment="CENTER" fx:id="mainVbox">
 
 
-    <GridPane styleClass="stock-div" minWidth="780" >
-
-        <columnConstraints>
-            <ColumnConstraints minWidth=""
-        </columnConstraints>
-
-        <Circle fill="aqua"/>
-    </GridPane>
-
-
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
+<!--    <HBox styleClass="stock-div"></HBox>-->
+<!--    <HBox styleClass="stock-div"></HBox>-->
+<!--    <HBox styleClass="stock-div"></HBox>-->
+<!--    <HBox styleClass="stock-div"></HBox>-->
+<!--    <HBox styleClass="stock-div"></HBox>-->
 
 </VBox>
 

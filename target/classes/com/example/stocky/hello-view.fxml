@@ -12,23 +12,20 @@
 <?import javafx.scene.layout.GridPane?>
 
 
+<?import javafx.scene.shape.Circle?>
 <ScrollPane xmlns:fx="http://javafx.com/fxml" minHeight="Infinity" minWidth="Infinity" fx:id="mainPanel" fx:controller="com.example.stocky.HelloController" stylesheets="@app/test.css">
 
 
 
 
-<VBox alignment="CENTER">
-
-    <VBox.margin>
-        <Insets left="20" top="50"/>
-    </VBox.margin>
+<VBox alignment="CENTER" fx:id="mainVbox">
 
 
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
-    <GridPane styleClass="stock-div" minWidth="760" ></GridPane>
+<!--    <HBox styleClass="stock-div"></HBox>-->
+<!--    <HBox styleClass="stock-div"></HBox>-->
+<!--    <HBox styleClass="stock-div"></HBox>-->
+<!--    <HBox styleClass="stock-div"></HBox>-->
+<!--    <HBox styleClass="stock-div"></HBox>-->
 
 </VBox>
 

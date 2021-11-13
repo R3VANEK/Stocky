@@ -4,6 +4,7 @@
 }
 .stock-div{
     -fx-background-color:#5e6063;
-    -fx-background-insets: 30px;
-    -fx-min-height:200px;
+    -fx-pref-height:150px;
+    -fx-pref-width:680px;
+
 }
