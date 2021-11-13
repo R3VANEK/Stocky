@@ -8,31 +8,32 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
-    @FXML
-    private Label welcomeText;
+
     @FXML
     private VBox mainVbox;
 
+    private static final DecimalFormat df = new DecimalFormat("0.00");
+
+
     @FXML
     protected void onHelloButtonClick() throws IOException {
-
-        welcomeText.setText("Welcome to JavaFX Application!");
-
-
 
 
     }
@@ -60,7 +61,7 @@ public class HelloController implements Initializable {
                 String ticker = stockInfo.getAsJsonObject().get("Ticker").getAsString();
                 JsonObject apiStockData = ScrapingAPI.getJSONCard(ticker);
 
-                HBox apiCard = new HBox(90);
+                HBox apiCard = new HBox(0);
                 apiCard.getStyleClass().add("stock-div");
                 apiCard.setAlignment(Pos.CENTER_LEFT);
                 VBox.setMargin(apiCard,new Insets(50,0,0,50));
@@ -76,12 +77,47 @@ public class HelloController implements Initializable {
                 HBox.setMargin(investmentCircle, new Insets(0,0,70,10));
 
 
+                Label tickerLabel = new Label(ticker);
+                tickerLabel.setFont(new Font(19));
 
+                Label companyLabel = new Label(apiStockData.getAsJsonObject().get("shortName").getAsString());
+                companyLabel.setFont(new Font(24));
+
+                Label boughtAtLabel = new Label("Bought at: "+stockInfo.getAsJsonObject().get("BoughtAt").getAsString()+"$");
+                boughtAtLabel.setFont(new Font(15));
+
+
+
+                Label percentageLabel = new Label(df.format(investPercentage)+"%");
+                if(investPercentage >= 0.0)
+                    percentageLabel.setTextFill(Paint.valueOf("#9bf542"));
+                else
+                    percentageLabel.setTextFill(Paint.valueOf("#f54e42"));
+                percentageLabel.setFont(new Font(40));
+                HBox.setMargin(percentageLabel,new Insets(0,0,0,170));
+
+                Label currentPriceLabel = new Label("Current price: "+currentPrice+"$");
+                currentPriceLabel.setFont(new Font(15));
+
+                VBox labelTextHolder = new VBox();
+                VBox.setMargin(boughtAtLabel,new Insets(5,0,0,0));
+                labelTextHolder.getChildren().addAll(tickerLabel,companyLabel,boughtAtLabel);
+                HBox.setMargin(labelTextHolder, new Insets(10,0,0,20));
+
+                VBox labelStockHolder = new VBox();
+                VBox.setMargin(currentPriceLabel, new Insets(0,0,0,0));
+                VBox.setMargin(percentageLabel, new Insets(20,0,0,0));
+
+                labelStockHolder.getChildren().addAll(percentageLabel,currentPriceLabel);
+
+
+                HBox.setMargin(labelStockHolder,new Insets(0,0,0,170));
 
 
 
 
                 apiCard.getChildren().addAll(investmentCircle);
+                apiCard.getChildren().addAll(labelTextHolder,labelStockHolder);
                 mainVbox.getChildren().add(apiCard);
 
             } catch (IOException e) {

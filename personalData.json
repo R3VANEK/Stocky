@@ -7,6 +7,14 @@
     {
       "Ticker" : "GME",
       "BoughtAt" : "400"
+    },
+    {
+      "Ticker" : "SHOP",
+      "BoughtAt" : "1669.52"
+    },
+    {
+      "Ticker" : "JNJ",
+      "BoughtAt" : "100"
     }
   ]
 }
