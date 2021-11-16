@@ -21,6 +21,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
@@ -33,11 +34,15 @@ public class HelloController implements Initializable {
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
+    private static JsonArray apiJsonStockData = new JsonArray();
+
+
+
 
     @FXML
-    protected void onSaveButtonClick(){
+    protected void onSaveButtonClick() throws IOException {
 
-        System.out.println("siema");
+        FileManager.saveSessionFile(apiJsonStockData);
 
 
 
@@ -45,49 +50,55 @@ public class HelloController implements Initializable {
 
         // create popu Window about saving data
         //-------------------------------------------------------------
-        Stage PopupWindow = new Stage();
-        Label PopupLabel = new Label("Saved data in 123.json");
-        PopupLabel.setFont(new Font(19));
-        PopupWindow.initModality(Modality.APPLICATION_MODAL);
-        PopupWindow.setTitle("Information");
-        VBox layout= new VBox(10);
-
-        layout.getChildren().addAll(PopupLabel);
-        layout.setAlignment(Pos.CENTER);
-        Scene scene1 = new Scene(layout, 300, 250);
-        PopupWindow.setScene(scene1);
-        PopupWindow.showAndWait();
+        //        Stage PopupWindow = new Stage();
+        //        Label PopupLabel = new Label("Saved data in 123.json");
+        //        PopupLabel.setFont(new Font(19));
+        //        PopupWindow.initModality(Modality.APPLICATION_MODAL);
+        //        PopupWindow.setTitle("Information");
+        //        VBox layout= new VBox(10);
+        //
+        //        layout.getChildren().addAll(PopupLabel);
+        //        layout.setAlignment(Pos.CENTER);
+        //        Scene scene1 = new Scene(layout, 300, 250);
+        //        PopupWindow.setScene(scene1);
+        //        PopupWindow.showAndWait();
         //-------------------------------------------------------------
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        JsonArray userStocks = null;
 
-        File file = new File("./personalData.json");
+       JsonArray apiUserData = null;
         try {
-            String content = new String(Files.readAllBytes(Paths.get(file.toURI())));
-            JsonElement jsonObject = new JsonParser().parse(content);
-            userStocks = jsonObject.getAsJsonObject().get("myStocks").getAsJsonArray();
-
-            } catch (IOException ioException) {
-            ioException.printStackTrace();
+            apiUserData = FileManager.readUserFile();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        System.out.println(userStocks);
-
-        assert userStocks != null;
-        for(JsonElement stockInfo : userStocks){
+        assert apiUserData != null;
+        for(JsonElement stockInfo : apiUserData){
             try {
                 String ticker = stockInfo.getAsJsonObject().get("Ticker").getAsString();
-                JsonObject apiStockData = ScrapingAPI.getJSONCard(ticker);
+                JsonObject jsonCard = ScrapingAPI.getJSONCard(ticker);
+                double currentPrice = jsonCard.get("dailyPrices")
+                                                .getAsJsonArray()
+                                                .get(jsonCard.get("dailyPrices")
+                                                .getAsJsonArray().size()-1)
+                                                .getAsDouble();
+
+
+                JsonParser parser = new JsonParser();
+                JsonObject simpleJsonCard = new JsonObject();
+                simpleJsonCard.add("Ticker");
+                apiJsonStockData.add(parser.parse(String.valueOf(jsonCard)));
+
 
                 HBox apiCard = new HBox(0);
                 apiCard.getStyleClass().add("stock-div");
                 apiCard.setAlignment(Pos.CENTER_LEFT);
                 VBox.setMargin(apiCard,new Insets(50,0,0,50));
-                double currentPrice = apiStockData.get("dailyPrices").getAsJsonArray().get(apiStockData.get("dailyPrices").getAsJsonArray().size()-1).getAsDouble();
+
                 double userPrice = stockInfo.getAsJsonObject().get("BoughtAt").getAsDouble();
 
                 double investPercentage = (currentPrice/userPrice)*100-100;
@@ -102,7 +113,7 @@ public class HelloController implements Initializable {
                 Label tickerLabel = new Label(ticker);
                 tickerLabel.setFont(new Font(19));
 
-                Label companyLabel = new Label(apiStockData.getAsJsonObject().get("shortName").getAsString());
+                Label companyLabel = new Label(jsonCard.getAsJsonObject().get("shortName").getAsString());
                 companyLabel.setFont(new Font(24));
 
                 Label boughtAtLabel = new Label("Bought at: "+stockInfo.getAsJsonObject().get("BoughtAt").getAsString()+"$");
