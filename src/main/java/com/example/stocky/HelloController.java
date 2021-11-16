@@ -1,27 +1,26 @@
 package com.example.stocky;
 
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
@@ -29,13 +28,36 @@ public class HelloController implements Initializable {
     @FXML
     private VBox mainVbox;
 
+    @FXML
+    private Button saveButton;
+
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
 
     @FXML
-    protected void onHelloButtonClick() throws IOException {
+    protected void onSaveButtonClick(){
+
+        System.out.println("siema");
 
 
+
+
+
+        // create popu Window about saving data
+        //-------------------------------------------------------------
+        Stage PopupWindow = new Stage();
+        Label PopupLabel = new Label("Saved data in 123.json");
+        PopupLabel.setFont(new Font(19));
+        PopupWindow.initModality(Modality.APPLICATION_MODAL);
+        PopupWindow.setTitle("Information");
+        VBox layout= new VBox(10);
+
+        layout.getChildren().addAll(PopupLabel);
+        layout.setAlignment(Pos.CENTER);
+        Scene scene1 = new Scene(layout, 300, 250);
+        PopupWindow.setScene(scene1);
+        PopupWindow.showAndWait();
+        //-------------------------------------------------------------
     }
 
     @Override

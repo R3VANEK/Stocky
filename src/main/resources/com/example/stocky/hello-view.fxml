@@ -21,11 +21,9 @@
 <VBox alignment="CENTER" fx:id="mainVbox">
 
 
-<!--    <HBox styleClass="stock-div"></HBox>-->
-<!--    <HBox styleClass="stock-div"></HBox>-->
-<!--    <HBox styleClass="stock-div"></HBox>-->
-<!--    <HBox styleClass="stock-div"></HBox>-->
-<!--    <HBox styleClass="stock-div"></HBox>-->
+    <Button fx:id="saveButton" onMouseClicked="#onSaveButtonClick">
+        Save session data
+    </Button>
 
 </VBox>
 
