@@ -1,8 +1,6 @@
 package com.example.stocky;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,7 +16,7 @@ import java.util.Date;
 public class FileManager {
 
 
-    private static File userFile = new File("./personalData.json");
+    private static final File userFile = new File("./personalData.json");
 
 
 
@@ -28,20 +26,40 @@ public class FileManager {
         return jsonObject.getAsJsonObject().get("myStocks").getAsJsonArray();
     }
 
-    public static boolean saveSessionFile(JsonArray apiJsonStockData) throws IOException {
+
+
+
+    public static String saveSessionFile(JsonArray apiJsonStockData) throws IOException {
+
         LocalDate currentDate = LocalDateTime.now().toLocalDate();
-        File sessionFile = new File(currentDate +".json");
+        File sessionFile = new File("data/" + currentDate + ".json");
 
         if (!sessionFile.createNewFile())
-            return false;
+            return "";
 
         FileWriter fileWriter = new FileWriter(sessionFile);
+        fileWriter.write("{\n \"StockData\" : [\n");
 
 
+        for(int i = 0; i < apiJsonStockData.size(); i++){
 
+            JsonElement el = apiJsonStockData.get(i);
+            fileWriter.write(
+            "\t\t{\n\t\t\t\"Ticker\" : "+'\"'+el.getAsJsonObject().get("Ticker").getAsString()+"\","
+                +"\n\t\t\t\"Currentprice\" : "+el.getAsJsonObject().get("Currentprice").getAsDouble()
+                +"\n\t\t}"
+            );
 
+            if ((i != apiJsonStockData.size() - 1))
+                fileWriter.write(",\n");
+            else
+                fileWriter.write('\n');
+        }
 
-        return true;
+        fileWriter.write("\t]\n}");
+        fileWriter.close();
+
+        return "data/" + currentDate.toString() + ".json";
     }
 
 }

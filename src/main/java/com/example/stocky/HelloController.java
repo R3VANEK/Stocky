@@ -42,7 +42,7 @@ public class HelloController implements Initializable {
     @FXML
     protected void onSaveButtonClick() throws IOException {
 
-        FileManager.saveSessionFile(apiJsonStockData);
+        String sessionFileName = FileManager.saveSessionFile(apiJsonStockData);
 
 
 
@@ -50,18 +50,18 @@ public class HelloController implements Initializable {
 
         // create popu Window about saving data
         //-------------------------------------------------------------
-        //        Stage PopupWindow = new Stage();
-        //        Label PopupLabel = new Label("Saved data in 123.json");
-        //        PopupLabel.setFont(new Font(19));
-        //        PopupWindow.initModality(Modality.APPLICATION_MODAL);
-        //        PopupWindow.setTitle("Information");
-        //        VBox layout= new VBox(10);
-        //
-        //        layout.getChildren().addAll(PopupLabel);
-        //        layout.setAlignment(Pos.CENTER);
-        //        Scene scene1 = new Scene(layout, 300, 250);
-        //        PopupWindow.setScene(scene1);
-        //        PopupWindow.showAndWait();
+                Stage PopupWindow = new Stage();
+                Label PopupLabel = new Label("Saved in " + sessionFileName);
+                PopupLabel.setFont(new Font(16));
+                PopupWindow.initModality(Modality.APPLICATION_MODAL);
+                PopupWindow.setTitle("Information");
+                VBox layout= new VBox(10);
+
+                layout.getChildren().addAll(PopupLabel);
+                layout.setAlignment(Pos.CENTER);
+                Scene scene1 = new Scene(layout, 300, 250);
+                PopupWindow.setScene(scene1);
+                PopupWindow.showAndWait();
         //-------------------------------------------------------------
     }
 
@@ -78,84 +78,92 @@ public class HelloController implements Initializable {
 
         assert apiUserData != null;
         for(JsonElement stockInfo : apiUserData){
+
+            String ticker = stockInfo.getAsJsonObject().get("Ticker").getAsString();
+            JsonObject jsonCard = null;
             try {
-                String ticker = stockInfo.getAsJsonObject().get("Ticker").getAsString();
-                JsonObject jsonCard = ScrapingAPI.getJSONCard(ticker);
-                double currentPrice = jsonCard.get("dailyPrices")
-                                                .getAsJsonArray()
-                                                .get(jsonCard.get("dailyPrices")
-                                                .getAsJsonArray().size()-1)
-                                                .getAsDouble();
-
-
-                JsonParser parser = new JsonParser();
-                JsonObject simpleJsonCard = new JsonObject();
-                simpleJsonCard.add("Ticker");
-                apiJsonStockData.add(parser.parse(String.valueOf(jsonCard)));
-
-
-                HBox apiCard = new HBox(0);
-                apiCard.getStyleClass().add("stock-div");
-                apiCard.setAlignment(Pos.CENTER_LEFT);
-                VBox.setMargin(apiCard,new Insets(50,0,0,50));
-
-                double userPrice = stockInfo.getAsJsonObject().get("BoughtAt").getAsDouble();
-
-                double investPercentage = (currentPrice/userPrice)*100-100;
-                Circle investmentCircle;
-                if(investPercentage >= 0.0)
-                    investmentCircle = new Circle(30, Paint.valueOf("#9bf542"));
-                else
-                    investmentCircle = new Circle(30, Paint.valueOf("#f54e42"));
-                HBox.setMargin(investmentCircle, new Insets(0,0,70,10));
-
-
-                Label tickerLabel = new Label(ticker);
-                tickerLabel.setFont(new Font(19));
-
-                Label companyLabel = new Label(jsonCard.getAsJsonObject().get("shortName").getAsString());
-                companyLabel.setFont(new Font(24));
-
-                Label boughtAtLabel = new Label("Bought at: "+stockInfo.getAsJsonObject().get("BoughtAt").getAsString()+"$");
-                boughtAtLabel.setFont(new Font(15));
-
-
-
-                Label percentageLabel = new Label(df.format(investPercentage)+"%");
-                if(investPercentage >= 0.0)
-                    percentageLabel.setTextFill(Paint.valueOf("#9bf542"));
-                else
-                    percentageLabel.setTextFill(Paint.valueOf("#f54e42"));
-                percentageLabel.setFont(new Font(40));
-                HBox.setMargin(percentageLabel,new Insets(0,0,0,170));
-
-                Label currentPriceLabel = new Label("Current price: "+currentPrice+"$");
-                currentPriceLabel.setFont(new Font(15));
-
-                VBox labelTextHolder = new VBox();
-                VBox.setMargin(boughtAtLabel,new Insets(5,0,0,0));
-                labelTextHolder.getChildren().addAll(tickerLabel,companyLabel,boughtAtLabel);
-                HBox.setMargin(labelTextHolder, new Insets(10,0,0,20));
-
-                VBox labelStockHolder = new VBox();
-                VBox.setMargin(currentPriceLabel, new Insets(0,0,0,0));
-                VBox.setMargin(percentageLabel, new Insets(20,0,0,0));
-
-                labelStockHolder.getChildren().addAll(percentageLabel,currentPriceLabel);
-
-
-                HBox.setMargin(labelStockHolder,new Insets(0,0,0,170));
-
-
-
-
-                apiCard.getChildren().addAll(investmentCircle);
-                apiCard.getChildren().addAll(labelTextHolder,labelStockHolder);
-                mainVbox.getChildren().add(apiCard);
-
+                jsonCard = ScrapingAPI.getJSONCard(ticker);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
+            assert jsonCard != null;
+            double currentPrice = jsonCard.get("dailyPrices")
+                                            .getAsJsonArray()
+                                            .get(jsonCard.get("dailyPrices")
+                                            .getAsJsonArray().size()-1)
+                                            .getAsDouble();
+
+
+            //--------------------------------------------------------------------------------------------
+            JsonParser parser = new JsonParser();
+            JsonObject simpleJsonCard = new JsonObject();
+            simpleJsonCard.add("Ticker",parser.parse(String.valueOf(jsonCard.get("ticker").getAsString())));
+            simpleJsonCard.add("Currentprice",parser.parse(String.valueOf(jsonCard.get("dailyPrices").getAsJsonArray().get(jsonCard.get("dailyPrices").getAsJsonArray().size()-1))));
+            apiJsonStockData.add(parser.parse(String.valueOf(simpleJsonCard)));
+            //--------------------------------------------------------------------------------------------
+
+            HBox apiCard = new HBox(0);
+            apiCard.getStyleClass().add("stock-div");
+            apiCard.setAlignment(Pos.CENTER_LEFT);
+            VBox.setMargin(apiCard,new Insets(50,0,0,50));
+
+            double userPrice = stockInfo.getAsJsonObject().get("BoughtAt").getAsDouble();
+
+            double investPercentage = (currentPrice/userPrice)*100-100;
+            Circle investmentCircle;
+            if(investPercentage >= 0.0)
+                investmentCircle = new Circle(30, Paint.valueOf("#9bf542"));
+            else
+                investmentCircle = new Circle(30, Paint.valueOf("#f54e42"));
+            HBox.setMargin(investmentCircle, new Insets(0,0,70,10));
+
+
+            Label tickerLabel = new Label(ticker);
+            tickerLabel.setFont(new Font(19));
+
+            Label companyLabel = new Label(jsonCard.getAsJsonObject().get("shortName").getAsString());
+            companyLabel.setFont(new Font(24));
+
+            Label boughtAtLabel = new Label("Bought at: "+stockInfo.getAsJsonObject().get("BoughtAt").getAsString()+"$");
+            boughtAtLabel.setFont(new Font(15));
+
+
+
+            Label percentageLabel = new Label(df.format(investPercentage)+"%");
+            if(investPercentage >= 0.0)
+                percentageLabel.setTextFill(Paint.valueOf("#9bf542"));
+            else
+                percentageLabel.setTextFill(Paint.valueOf("#f54e42"));
+            percentageLabel.setFont(new Font(40));
+            HBox.setMargin(percentageLabel,new Insets(0,0,0,170));
+
+            Label currentPriceLabel = new Label("Current price: "+currentPrice+"$");
+            currentPriceLabel.setFont(new Font(15));
+
+            VBox labelTextHolder = new VBox();
+            VBox.setMargin(boughtAtLabel,new Insets(5,0,0,0));
+            labelTextHolder.getChildren().addAll(tickerLabel,companyLabel,boughtAtLabel);
+            HBox.setMargin(labelTextHolder, new Insets(10,0,0,20));
+
+            VBox labelStockHolder = new VBox();
+            VBox.setMargin(currentPriceLabel, new Insets(0,0,0,0));
+            VBox.setMargin(percentageLabel, new Insets(20,0,0,0));
+
+            labelStockHolder.getChildren().addAll(percentageLabel,currentPriceLabel);
+
+
+            HBox.setMargin(labelStockHolder,new Insets(0,0,0,170));
+
+
+
+
+            apiCard.getChildren().addAll(investmentCircle);
+            apiCard.getChildren().addAll(labelTextHolder,labelStockHolder);
+            mainVbox.getChildren().add(apiCard);
+
+
         }
 
 
