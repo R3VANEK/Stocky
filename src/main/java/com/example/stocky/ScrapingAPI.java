@@ -12,15 +12,7 @@ import com.google.gson.JsonParser;
 
 
 public interface ScrapingAPI{
-
-    String[] defaultStockTickers = {"GME", "TSLA","DELL","BP","NN","F","ZG","BNGO"};
-
-
-    static String getStockShortName(String givenName){
-        return "not implemented";
-    }
-
-
+    
     private static String getBodyFromAPI(String givenURL) throws IOException{
         URL expansionsListUrl = new URL(givenURL);
         HttpURLConnection conn = (HttpURLConnection) expansionsListUrl.openConnection();

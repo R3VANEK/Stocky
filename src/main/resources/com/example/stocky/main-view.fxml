@@ -13,7 +13,7 @@
 
 
 <?import javafx.scene.shape.Circle?>
-<ScrollPane xmlns:fx="http://javafx.com/fxml" minHeight="Infinity" minWidth="Infinity" fx:id="mainPanel" fx:controller="com.example.stocky.HelloController" stylesheets="@app/test.css">
+<ScrollPane xmlns:fx="http://javafx.com/fxml" minHeight="Infinity" minWidth="Infinity" fx:id="mainPanel" fx:controller="com.example.stocky.MainController" stylesheets="@app/main.css">
 
 
 

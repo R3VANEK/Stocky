@@ -34,9 +34,6 @@ public class FileManager {
         LocalDate currentDate = LocalDateTime.now().toLocalDate();
         File sessionFile = new File("data/" + currentDate + ".json");
 
-        if (!sessionFile.createNewFile())
-            return "";
-
         FileWriter fileWriter = new FileWriter(sessionFile);
         fileWriter.write("{\n \"StockData\" : [\n");
 

@@ -11,11 +11,11 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
-public class HelloApplication extends Application {
+public class MainApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
         primaryStage.setTitle("Stocky");
         primaryStage.setScene(new Scene(root, 800, 500));
         primaryStage.show();
